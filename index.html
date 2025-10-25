@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>David Ikangbo | DevOps Engineer</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>David Ikangbo</h1>
+    <p>DevOps Engineer | Cloud & Infrastructure Specialist</p>
+    <button id="theme-toggle">Toggle Theme</button>
+    <br />
+    <a href="David_Ikangbo_Resume.pdf" download class="download-btn">Download Resume</a>
+  </header>
+
+  <main>
+    <section class="card" id="summary">
+      <h2>Summary</h2>
+      <p>Experienced IT service delivery professional with 8+ years across DevOps, cloud infrastructure, software development, and IT support. Skilled in deploying scalable systems on AWS and GCP, managing hybrid environments, and driving operational efficiency in banking, healthcare, and NGO sectors.</p>
+    </section>
+
+    <section class="card" id="skills">
+      <h2>Skills</h2>
+      <ul>
+        <li>Terraform, CloudFormation, GKE, Vault</li>
+        <li>Prometheus, Grafana, AWS CloudWatch</li>
+        <li>Python, Power BI, Excel</li>
+        <li>Windows, Linux, macOS</li>
+      </ul>
+    </section>
+
+    <section class="card" id="projects">
+      <h2>Projects</h2>
+      <div class="project-grid">
+        <div class="project-card">
+          <h3>Cloud Infrastructure Automation</h3>
+          <p>Provisioned multi-tier AWS environments using Terraform and CloudFormation.</p>
+          <a href="#">View Details</a>
+        </div>
+        <div class="project-card">
+          <h3>GKE CI/CD Pipeline</h3>
+          <p>Built Git-to-Concourse pipeline for container deployment on GKE.</p>
+          <a href="#">View Details</a>
+        </div>
+        <div class="project-card">
+          <h3>Vault Secrets Management</h3>
+          <p>Implemented secure secrets handling across environments using Vault.</p>
+          <a href="#">View Details</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="experience">
+      <h2>Experience</h2>
+      <div class="job">
+        <h3>DevOps Engineer – eHealth Africa</h3>
+        <p>Dec 2024 – Present</p>
+        <ul>
+          <li>Provision AWS infrastructure using Terraform and CloudFormation</li>
+          <li>Deploy containers on GKE via Git-Concourse pipelines</li>
+          <li>Monitor systems with Prometheus and Grafana</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" id="education">
+      <h2>Education</h2>
+      <ul>
+        <li>PhD in Computer Science (In View) – Nasarawa State University</li>
+        <li>MSc ICT – Bayero University Kano</li>
+      </ul>
+    </section>
+
+    <section class="card" id="contact">
+      <h2>Contact</h2>
+      <div class="cli">
+        <p><span class="prompt">>_</span> Email: davidikangbo@gmail.com</p>
+        <p><span class="prompt">>_</span> Phone: +234 816 599 6623</p>
+        <p><span class="prompt">>_</span> Portfolio: <a href="https://dikangbo.netlify.app">dikangbo.netlify.app</a></p>
+      </div>
+    </section>
+
+    <section class="card" id="contact-form">
+      <h2>Send a Message</h2>
+      <form action="https://formspree.io/f/your-form-id" method="POST">
+        <label for="name">Name</label>
+        <input type="text" name="name" required />
+
+        <label for="email">Email</label>
+        <input type="email" name="email" required />
+
+        <label for="message">Message</label>
+        <textarea name="message" rows="5" required></textarea>
+
+        <button type="submit">Send</button>
+      </form>
+    </section>
+
+    <section class="card" id="blog">
+      <h2>Blog</h2>
+      <article class="blog-post">
+        <h3>How I Built a Multi-Cloud DevOps Pipeline</h3>
+        <p>Learn how I integrated Terraform, Vault, and Concourse CI to deploy across AWS and GKE...</p>
+             <a href="#">Read More</a>
+      </article>
+      <article class="blog-post">
+        <h3>Secrets Management with Vault</h3>
+        <p>Best practices for securing credentials and tokens in cloud-native environments...</p>
+        <a href="#">Read More</a>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 David Ikangbo</p>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById('theme-toggle');
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+    });
+  </script>
+</body>
+</html>
