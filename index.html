@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>David Ikangbo | DevOps & Cloud Engineer</title>
+  <meta name="description"
+    content="Portfolio of David Ikangbo, a DevOps Engineer specializing in Cloud Infrastructure, Automation, and Security.">
+  <meta property="og:title" content="David Ikangbo | DevOps & Cloud Engineer">
+  <meta property="og:description"
+    content="Explore the portfolio of David Ikangbo, featuring expertises in AWS, GKE, Terraform, and Vault. Download CV available.">
+  <meta property="og:image" content="David.jpg">
+  <meta property="og:url" content="https://dikangbo.netlify.app">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;600;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="logo">&lt;David.Ikangbo /&gt;</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button id="theme-toggle" aria-label="Toggle Dark Mode">
+      <i class="fas fa-moon"></i>
+    </button>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero container">
+    <div class="hero-content">
+      <h1 class="animate-on-scroll">Hi, I'm David.</h1>
+      <p class="subtitle" id="typing-text"></p>
+      <p class="animate-on-scroll" style="max-width: 600px; margin-top: 1rem; color: var(--secondary);">
+        Helping organizations build scalable, secure, and automated cloud infrastructure.
+        Previously at eHealth Africa, specializing in AWS, GCP, and Kubernetes.
+      </p>
+      <div class="cta-buttons animate-on-scroll">
+        <a href="#projects" class="btn btn-primary">View Work</a>
+        <button onclick="downloadResume()" class="btn btn-outline" style="cursor: pointer;">
+          <i class="fas fa-download"></i> Download CV
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- About / Summary -->
+    <section id="about" class="section animate-on-scroll">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2>About Me</h2>
+        <div class="view-toggle">
+          <button class="toggle-btn active" data-view="recruiter">Recruiter</button>
+          <button class="toggle-btn" data-view="developer">Dev Mode</button>
+        </div>
+      </div>
+
+      <div class="glass-card about-container">
+        <!-- Recruiter View -->
+        <div id="recruiter-view" class="view-content active">
+          <p class="typewriter-text" id="recruiter-text">
+            I am an experienced IT service delivery professional with over 8 years of expertise across DevOps,
+            Cloud Infrastructure, Software Development, and IT Support. I specialize in deploying scalable systems
+            on AWS and GCP, managing hybrid environments, and driving operational efficiency in banking, healthcare,
+            and NGO sectors. I am passionate about automation, security (Vault), and observability (Prometheus/Grafana).
+          </p>
+        </div>
+
+        <!-- Developer View -->
+        <div id="developer-view" class="view-content" style="display: none;">
+          <pre><code class="language-json" id="dev-text">{
+  "name": "David Ikangbo",
+  "role": "DevOps Engineer",
+  "experience": "8+ Years",
+  "skills": [
+    "AWS", "GCP", "Kubernetes", 
+    "Terraform", "Vault", "Python"
+  ],
+  "mission": "Automating the boring stuff",
+  "status": "Ready to deploy 🚀"
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills" class="section animate-on-scroll">
+      <h2>Tech Stack</h2>
+      <div class="glass-card">
+        <div class="skills-list">
+          <!-- Infrastructure -->
+          <span class="skill-tag"><i class="fas fa-cloud"></i> AWS</span>
+          <span class="skill-tag"><i class="fab fa-google"></i> GCP</span>
+          <span class="skill-tag"><i class="fas fa-code-branch"></i> Terraform</span>
+          <span class="skill-tag"><i class="fas fa-shapes"></i> CloudFormation</span>
+
+          <!-- Containerization & Orchestration -->
+          <span class="skill-tag"><i class="fab fa-docker"></i> Docker</span>
+          <span class="skill-tag"><i class="fas fa-dharmachakra"></i> Kubernetes / GKE</span>
+
+          <!-- CI/CD & Security -->
+          <span class="skill-tag"><i class="fas fa-sync"></i> Git & CI/CD</span>
+          <span class="skill-tag"><i class="fas fa-lock"></i> Vault</span>
+
+          <!-- Observability -->
+          <span class="skill-tag"><i class="fas fa-chart-line"></i> Prometheus</span>
+          <span class="skill-tag"><i class="fas fa-chart-bar"></i> Grafana</span>
+          <span class="skill-tag"><i class="fab fa-aws"></i> CloudWatch</span>
+
+          <!-- Languages & OS -->
+          <span class="skill-tag"><i class="fab fa-python"></i> Python</span>
+          <span class="skill-tag"><i class="fab fa-linux"></i> Linux</span>
+          <span class="skill-tag"><i class="fab fa-windows"></i> Windows</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="section animate-on-scroll">
+      <h2>Featured Projects</h2>
+      <div class="card-grid">
+        <article class="project-card glass-card">
+          <i class="fas fa-server fa-2x" style="color: var(--accent); margin-bottom: 1rem;"></i>
+          <h3>Multi-Cloud Infrastructure Automation</h3>
+          <p>Architected and provisioned secure, multi-tier environments on AWS & GCP using modular Terraform code,
+            reducing provisioning time by <strong>40%</strong>.</p>
+          <a href="#" class="project-link">View Details <i class="fas fa-arrow-right"></i></a>
+        </article>
+
+        <article class="project-card glass-card">
+          <i class="fas fa-cubes fa-2x" style="color: var(--accent); margin-bottom: 1rem;"></i>
+          <h3>Automated GKE Delivery Pipelines</h3>
+          <p>Designed a GitOps workflow with Concourse CI for Google Kubernetes Engine, enabling <strong>zero-downtime
+              deployments</strong> and faster release cycles.</p>
+          <a href="#" class="project-link">View Details <i class="fas fa-arrow-right"></i></a>
+        </article>
+
+        <article class="project-card glass-card">
+          <i class="fas fa-key fa-2x" style="color: var(--accent); margin-bottom: 1rem;"></i>
+          <h3>Enterprise Secrets Management</h3>
+          <p>Deployed highly-available HashiCorp Vault clusters to centrally manage dynamic secrets and certificates,
+            achieving <strong>100% compliance</strong> with security policies.</p>
+          <a href="#" class="project-link">View Details <i class="fas fa-arrow-right"></i></a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience" class="section animate-on-scroll">
+      <h2>Experience</h2>
+      <div class="timeline glass-card">
+
+        <div class="timeline-item">
+          <span class="timeline-date">Dec 2024 – Present</span>
+          <h3>DevOps Engineer</h3>
+          <h4 style="color: var(--secondary)">eHealth Systems Africa</h4>
+          <ul>
+            <li><strong>Cloud Infrastructure</strong>: Managed AWS & GKE environments using Terraform and
+              CloudFormation, ensuring
+              scalable and secure deployments.</li>
+            <li><strong>CI/CD pipelines</strong>: Orchestrated automated build/release workflows with Concourse CI,
+              reducing
+              deployment times by 40%.</li>
+            <li><strong>Observability</strong>: Maintained 99.9% system availability via Prometheus/Grafana monitoring
+              and proactive
+              alerting.</li>
+            <li><strong>Security</strong>: Implemented HashiCorp Vault for centralized secrets management, enhancing
+              compliance and
+              data security.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-date">Aug 2022 – Dec 2023</span>
+          <h3>Associate, System Network Administrator</h3>
+          <h4 style="color: var(--secondary)">eHealth Systems Africa</h4>
+          <ul>
+            <li><strong>Network Optimization</strong>: Administered LAN/WAN infrastructure for enterprise users,
+              ensuring high
+              availability and seamless connectivity.</li>
+            <li><strong>System Administration</strong>: Managed Windows/Linux server fleets, handling patching, backups,
+              and disaster
+              recovery planning.</li>
+            <li><strong>Security Enforcement</strong>: Configured firewalls, VPNs, and access controls to mitigate cyber
+              threats and
+              unauthorized access.</li>
+            <li><strong>Project Support</strong>: Provided technical leadership for the EMID/IT Optimization project and
+              supported
+              NPHCDA data center upgrades.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-date">Nov 2021 – Jul 2022</span>
+          <h3>IT Operations Lead</h3>
+          <h4 style="color: var(--secondary)">CUST Commodities West Africa</h4>
+          <ul>
+            <li><strong>Tech Leadership</strong>: Designed internal tools to streamline business operations and improve
+              workflow
+              efficiency.</li>
+            <li><strong>Digital Asset Management</strong>: Maintained company web assets (1labs.ng) ensuring
+              implementation of
+              performance best practices.</li>
+            <li><strong>Infrastructure</strong>: Oversaw compute resources and conducted staff training on new digital
+              technologies.
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Blog (Optional - keeping existing content structure) -->
+    <section id="blog" class="section animate-on-scroll">
+      <h2>Recent Writings</h2>
+      <div class="card-grid">
+        <article class="blog-post glass-card">
+          <h3>How I Built a Multi-Cloud DevOps Pipeline</h3>
+          <p>Learn how I integrated Terraform, Vault, and Concourse CI to deploy across AWS and GKE...</p>
+          <a href="#" class="project-link">Read More</a>
+        </article>
+        <article class="blog-post glass-card">
+          <h3>Secrets Management with Vault</h3>
+          <p>Best practices for securing credentials and tokens in cloud-native environments...</p>
+          <a href="#" class="project-link">Read More</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section id="education" class="section animate-on-scroll">
+      <h2>Education</h2>
+      <div class="glass-card">
+        <ul class="education-list" style="list-style: none;">
+
+          <li style="margin-bottom: 1rem;">
+            <strong>MSc Information & Communication Technology</strong> <span
+              style="color: var(--accent); font-size: 0.9em;">(CGPA: 5.00/5.00)</span><br>
+            <span style="color: var(--secondary)">Bayero University Kano (2020 – 2021)</span>
+          </li>
+
+          <li>
+            <strong>HND Computer Science</strong> <span style="color: var(--accent); font-size: 0.9em;">(CGPA:
+              3.50/4.00)</span><br>
+            <span style="color: var(--secondary)">The Federal Polytechnic Bida (2014 – 2016)</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Certifications -->
+    <section id="certifications" class="section animate-on-scroll">
+      <h2>Certifications</h2>
+      <div class="glass-card">
+        <div class="skills-list">
+          <a href="https://www.credly.com/users/david-ikangbo" target="_blank" class="skill-tag"
+            style="border-color: var(--accent); text-decoration: none;">
+            <i class="fab fa-google"></i> Google Associate Cloud Engineer <i class="fas fa-external-link-alt"
+              style="font-size: 0.7em;"></i>
+          </a>
+          <a href="https://www.credly.com/users/david-ikangbo" target="_blank" class="skill-tag"
+            style="border-color: var(--accent); text-decoration: none;">
+            <i class="fas fa-dharmachakra"></i> Kubernetes & Cloud Native Associate <i class="fas fa-external-link-alt"
+              style="font-size: 0.7em;"></i>
+          </a>
+          <a href="https://www.credly.com/users/david-ikangbo" target="_blank" class="skill-tag"
+            style="border-color: var(--accent); text-decoration: none;">
+            <i class="fab fa-aws"></i> AWS Certified Cloud Practitioner <i class="fas fa-external-link-alt"
+              style="font-size: 0.7em;"></i>
+          </a>
+          <a href="https://www.credly.com/users/david-ikangbo" target="_blank" class="skill-tag"
+            style="border-color: var(--accent); text-decoration: none;">
+            <i class="fab fa-microsoft"></i> Microsoft Certified DevOps Engineer Expert <i
+              class="fas fa-external-link-alt" style="font-size: 0.7em;"></i>
+          </a>
+          <a href="https://www.credly.com/users/david-ikangbo" target="_blank" class="skill-tag"
+            style="border-color: var(--accent); text-decoration: none;">
+            <i class="fab fa-microsoft"></i> Azure Administrator Associate <i class="fas fa-external-link-alt"
+              style="font-size: 0.7em;"></i>
+          </a>
+          <a href="https://www.credly.com/users/david-ikangbo" target="_blank" class="skill-tag"
+            style="border-color: var(--accent); text-decoration: none;">
+            <i class="fas fa-cloud"></i> Aviatrix Multi Cloud Engineer <i class="fas fa-external-link-alt"
+              style="font-size: 0.7em;"></i>
+          </a>
+          <a href="https://www.credly.com/users/david-ikangbo" target="_blank" class="skill-tag"
+            style="border-color: var(--accent); text-decoration: none;">
+            <i class="fab fa-windows"></i> MCSA Windows Server 2016 <i class="fas fa-external-link-alt"
+              style="font-size: 0.7em;"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section animate-on-scroll">
+      <h2>Get In Touch</h2>
+
+      <div class="contact-layout"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+
+        <!-- CLI Contact Info -->
+        <div class="cli-window">
+          <div class="cli-line">
+            <span class="prompt">user@dikangbo:~$</span> cat contact_info.json
+          </div>
+          <div class="cli-line">
+            {<br>
+            &nbsp;&nbsp;"email": "davidikangbo@gmail.com",<br>
+            &nbsp;&nbsp;"phone": "+234 816 599 6623",<br>
+            &nbsp;&nbsp;"location": "Nigeria",<br>
+            &nbsp;&nbsp;"status": "Open to opportunities"<br>
+            }
+          </div>
+          <div class="cli-line">
+            <span class="prompt">user@dikangbo:~$</span> <span class="cursor">_</span>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="glass-card">
+          <form action="https://formspree.io/f/your-form-id" method="POST">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="4" required
+                placeholder="Let's build something great..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; border:none;">Send Message</button>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Social Connect -->
+    <section id="connect" class="section animate-on-scroll" style="text-align: center;">
+      <h2>Let's Connect</h2>
+      <div class="glass-card" style="display: inline-block; padding: 2rem 4rem;">
+        <div class="social-links">
+          <a href="https://github.com/dikangbo" target="_blank" class="social-icon" aria-label="GitHub"><i
+              class="fab fa-github"></i></a>
+          <a href="https://x.com/yourhandle" target="_blank" class="social-icon" aria-label="X (Twitter)"><i
+              class="fab fa-x-twitter"></i></a>
+          <a href="https://linkedin.com/in/david-ikangbo" target="_blank" class="social-icon" aria-label="LinkedIn"><i
+              class="fab fa-linkedin"></i></a>
+          <a href="https://facebook.com/yourhandle" target="_blank" class="social-icon" aria-label="Facebook"><i
+              class="fab fa-facebook"></i></a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; <span id="year"></span>
+        <script>document.getElementById('year').textContent = new Date().getFullYear();</script> David Ikangbo.
+        Built with <i class="fas fa-heart" style="color: var(--accent);"></i> and code.
+      </p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
