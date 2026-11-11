@@ -21,7 +21,7 @@ const latest = (await getPosts()).slice(0, 3);
       <p class="tagline">{SITE.tagline}</p>
       <div class="cta-row">
         <a class="btn" href="#projects">View Work <span aria-hidden="true">-&gt;</span></a>
-        <a class="btn btn-ghost" href={SITE.resume} download>Download CV</a>
+        <a class="btn btn-ghost" href={`${SITE.resume}?print=true`}>Generate Resume PDF</a>
       </div>
     </div>
   </header>

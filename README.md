@@ -1,50 +1,61 @@
-# dikangbo — portfolio and engineering blog
+# Astro Portfolio
 
-Astro static site for David Ikangbo. Deployed to Netlify (free plan). No paid services.
+A responsive personal portfolio and engineering blog built with Astro. Fork it to create your own portfolio: update the profile and content data, run it locally, then deploy the static site to Netlify or another static host.
 
-## Commands
+## Features
 
-| Command | What it does |
-| --- | --- |
-| `npm install` | Install dependencies (Node 22) |
-| `npm run dev` | Dev server at http://localhost:4321 (drafts are visible) |
-| `npm run build` | Type-check, then build to `dist/` |
-| `npm run preview` | Serve the production build locally |
-| `node scripts/validate-build.mjs` | Check the build has RSS, sitemap, canonicals and OG tags |
+- Portfolio pages for projects, skills, experience, education, and community work
+- Markdown-powered blog with categories, tags, RSS, sitemap, and social preview images
+- Responsive layout with dark mode
+- Contact form configured for Netlify Forms
+- Print-ready resume generated from the site content; visitors can save it as a PDF from their browser's print dialog
+- GitHub Actions workflow for type-checking, building, and validating the site
 
-## Before the first deploy
+## Requirements
 
-1. Edit the social URLs in `src/data/site.ts` (LinkedIn, GitHub, X). Placeholders are marked `REPLACE-ME`.
-2. Put your resume at `public/documents/David_Ikangbo_Resume.pdf`. The old repo never contained the file, so the download button was broken.
-3. Add real credentials to `src/data/certifications.ts`. The section stays hidden in production until you do.
-4. Add real metrics to the project outcomes in `src/data/projects.ts` where you have them.
+- Node.js 22 or later
+- npm
 
-## Writing an article
+## Run locally
 
-Create `src/content/blog/<slug>.md`. The file name becomes the URL (`/blog/<slug>/`).
-
-```md
----
-title: "Your title (max 90 chars)"
-description: "50–200 characters; used for SEO, social cards and RSS."
-pubDate: 2026-12-01
-updatedDate: 2026-12-10      # optional
-category: DevOps              # DevOps | Platform Engineering | SRE | Cloud | Security
-tags: [Terraform, AWS]
-draft: false                  # true hides it from production builds
-related: [other-article-slug] # optional; otherwise picked by category/tag overlap
----
+```sh
+npm ci
+npm run dev
 ```
 
-- New categories: add them to `CATEGORIES` in `src/data/site.ts`.
-- Diagrams: put SVG/PNG files in `public/images/blog/` and embed with `<figure><img …><figcaption>…</figcaption></figure>`.
-- A 1200×630 social card is generated for every article at `/og/blog/<slug>.png`.
-- Reading time, table of contents, share buttons, related articles, RSS and JSON-LD are automatic.
+Astro prints the local development URL in the terminal, usually `http://localhost:4321`.
 
-## Deployment (GitHub → Netlify)
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run check` | Type-check Astro files |
+| `npm run build` | Type-check and create the production site in `dist/` |
+| `npm run preview` | Preview the production build locally |
+| `node scripts/validate-build.mjs` | Validate generated RSS, sitemap, canonical URLs, and social metadata |
 
-1. Push this repo to GitHub.
-2. Netlify → Add new site → Import from Git → choose the repo. Build settings come from `netlify.toml` (`npm run build`, publish `dist`).
-3. Pushes to `main` deploy to production; pull requests get deploy previews.
-4. Contact form: Netlify detects it at build time. Enable email notifications under Site configuration → Forms.
-5. `.github/workflows/ci.yml` builds and validates every push and PR. The old S3 deploy workflow was removed.
+## Make it yours
+
+1. Update name, biography, location, contact details, social links, and canonical site URL in `src/data/site.ts`.
+2. Edit experience, skills, education, training, and volunteering in `src/data/resume.ts`. The experience page and generated resume use this shared data.
+3. Update projects in `src/data/projects.ts` and certifications in `src/data/certifications.ts`.
+4. Replace `public/favicon.svg` and the diagrams in `public/images/blog/` with your own assets.
+5. Add or edit Markdown posts in `src/content/blog/`. Set `draft: true` in frontmatter to hide a post from production builds.
+6. Review the contact form and social links before publishing. The contact form uses Netlify Forms when deployed on Netlify.
+
+The resume at `/resume/` is rendered from your site content; it does not depend on a separately uploaded PDF. Use **Generate Resume PDF** to open the print dialog, then select **Save as PDF**. You can also open `/resume/` and use its print button.
+
+## Deploy
+
+### Netlify
+
+1. Fork this repository and push your changes to GitHub.
+2. In Netlify, create a site by importing your fork.
+3. Use `npm run build` as the build command and `dist` as the publish directory. Netlify reads these settings from `netlify.toml` at the repository root.
+4. Set the production URL in `src/data/site.ts` to your deployed domain and configure a custom domain in Netlify if desired.
+5. Enable Netlify Forms notifications if you want to receive contact-form submissions.
+
+The included GitHub Actions workflow runs the build and output validation on pushes to `main` and pull requests. Configure your deployment provider separately if you use a host other than Netlify.
+
+## License
+
+This project is released under the [MIT License](./LICENSE). Remember to replace the original owner's personal details, writing, project descriptions, and images with your own before publishing a fork.

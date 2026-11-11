@@ -1,0 +1,165 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { education, experience, resumeSummary, skills, volunteering } from '../data/resume';
+import { SITE } from '../data/site';
+---
+<BaseLayout
+  title="Resume"
+  description={`Professional resume for ${SITE.name}, ${SITE.tagline}`}
+  noindex
+>
+  <article class="resume-page">
+    <header class="resume-heading">
+      <p class="eyebrow">Resume</p>
+      <h1>{SITE.name}</h1>
+      <p class="resume-title">DevOps &amp; Platform Engineer · Solutions Architect</p>
+      <ul class="resume-contact" aria-label="Contact details">
+        <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+        <li><a href={`tel:${SITE.phone.replaceAll(' ', '')}`}>{SITE.phone}</a></li>
+        <li>{SITE.location}</li>
+        <li><a href={SITE.url}>{SITE.url.replace(/^https?:\/\//, '')}</a></li>
+        <li><a href={SITE.social.linkedin}>LinkedIn</a></li>
+        <li><a href={SITE.social.github}>GitHub</a></li>
+      </ul>
+    </header>
+
+    <section class="resume-section">
+      <h2>Professional Summary</h2>
+      <p>{resumeSummary}</p>
+    </section>
+
+    <section class="resume-section">
+      <h2>Core Skills</h2>
+      <div class="resume-skills">
+        {skills.map((group) => (
+          <p><strong>{group.category}:</strong> {group.items.join(' · ')}</p>
+        ))}
+      </div>
+    </section>
+
+    <section class="resume-section">
+      <h2>Professional Experience</h2>
+      {experience.map((job) => (
+        <article class="resume-job">
+          <div class="resume-job-heading">
+            <h3>{job.role}</h3>
+            {job.date && <span>{job.date}</span>}
+          </div>
+          <p class="resume-company">
+            {job.url ? <a href={job.url}>{job.company}</a> : job.company}
+          </p>
+          <ul>{job.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+        </article>
+      ))}
+    </section>
+
+    <section class="resume-section resume-two-column">
+      <div>
+        <h2>Education &amp; Training</h2>
+        <ul>{education.map((item) => <li>{item}</li>)}</ul>
+      </div>
+      <div>
+        <h2>Community</h2>
+        <ul>{volunteering.map((item) => <li>{item}</li>)}</ul>
+      </div>
+    </section>
+
+    <div class="resume-actions" aria-label="Resume actions">
+      <button class="btn" type="button" data-print-resume>Save as PDF / Print</button>
+      <a class="btn btn-ghost" href="/">Back to portfolio</a>
+      <p>In the print dialog, choose “Save as PDF” as the destination.</p>
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  const printButton = document.querySelector<HTMLButtonElement>('[data-print-resume]');
+  printButton?.addEventListener('click', () => window.print());
+
+  if (new URLSearchParams(window.location.search).get('print') === 'true') {
+    const printResume = () => window.setTimeout(() => window.print(), 300);
+    if (document.readyState === 'complete') printResume();
+    else window.addEventListener('load', printResume, { once: true });
+  }
+</script>
+
+<style>
+  .resume-page {
+    max-width: 860px;
+    margin: 2rem auto;
+    padding: clamp(1.25rem, 4vw, 3rem);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: var(--card-bg);
+  }
+
+  .resume-heading {
+    padding-bottom: 1.25rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .resume-heading .eyebrow { margin-bottom: .35rem; }
+  .resume-heading h1 { margin: 0; font-size: clamp(2rem, 6vw, 3rem); }
+  .resume-title { margin: .35rem 0 .75rem; color: var(--muted); font-size: 1.15rem; }
+  .resume-contact { display: flex; flex-wrap: wrap; gap: .35rem 1rem; margin: 0; padding: 0; list-style: none; }
+  .resume-contact li, .resume-contact a { overflow-wrap: anywhere; }
+  .resume-section { margin-top: 1.35rem; }
+  .resume-section h2 { margin: 0 0 .6rem; padding-bottom: .3rem; border-bottom: 1px solid var(--border); font-size: 1.1rem; }
+  .resume-section p { margin: .35rem 0; }
+  .resume-skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .2rem 1rem; }
+  .resume-job { margin: .9rem 0 1rem; break-inside: avoid; }
+  .resume-job-heading { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+  .resume-job-heading h3 { margin: 0; font-size: 1rem; }
+  .resume-job-heading span { color: var(--muted); font-size: .9rem; text-align: right; }
+  .resume-company { margin: .1rem 0 .25rem !important; color: var(--muted); font-weight: 600; }
+  .resume-job ul, .resume-two-column ul { margin: .25rem 0 0; padding-left: 1.15rem; }
+  .resume-job li, .resume-two-column li { margin: .2rem 0; }
+  .resume-two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .resume-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 2rem; }
+  .resume-actions p { flex-basis: 100%; margin: 0; color: var(--muted); font-size: .9rem; }
+
+  @media (max-width: 600px) {
+    .resume-skills, .resume-two-column { grid-template-columns: 1fr; }
+    .resume-job-heading { align-items: flex-start; flex-direction: column; gap: .15rem; }
+    .resume-job-heading span { text-align: left; }
+  }
+</style>
+
+<style is:global>
+  @page {
+    size: A4;
+    margin: 12mm 14mm;
+  }
+
+  @media print {
+    html, body {
+      background: #fff !important;
+      color: #17212b !important;
+      font-size: 9.5pt;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    .site-header, .site-footer, .resume-actions, .skip-link { display: none !important; }
+    main.container { display: block !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
+    .resume-page {
+      max-width: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: #fff !important;
+      color: #17212b !important;
+      box-shadow: none !important;
+      animation: none !important;
+    }
+    .resume-page * { color: #17212b !important; box-shadow: none !important; }
+    .resume-heading { border-color: #087e8b !important; }
+    .resume-section h2 { border-color: #cbd5df !important; color: #087e8b !important; }
+    .resume-job { break-inside: avoid-page; }
+    .resume-section h2 { break-after: avoid; }
+    .resume-job li, .resume-two-column li { break-inside: avoid; }
+    a { color: inherit !important; text-decoration: none !important; }
+    a[href^="http"]::after { content: none !important; }
+  }
+</style>

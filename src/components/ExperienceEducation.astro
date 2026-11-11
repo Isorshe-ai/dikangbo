@@ -1,71 +1,31 @@
 ---
+import { education, experience, volunteering } from '../data/resume';
 ---
 <section class="card section animate-on-scroll" id="experience">
   <p class="eyebrow"><span class="prompt">&gt;_</span> where I've been</p>
   <h2>Experience</h2>
   <div class="timeline">
-    <div class="timeline-item">
-      <span class="timeline-date">Dec 2024 – Present</span>
-      <h3>DevOps Engineer</h3>
-      <p class="role-company">eHealth Africa</p>
-      <ul>
-        <li>Designed a developer self-service secrets platform using HashiCorp Vault and Vault Secrets Operator, with templated least-privilege policies and a ticket-driven access flow.</li>
-        <li>Reworked Vault audit-log routing into hot and cold tiers, reducing hot-log costs by about 85% while retaining a complete archive; reconciled more than one million entries before rollout.</li>
-        <li>Led observability and alerting improvements across four Kubernetes clusters, taking failing scrape targets from 93 to zero and introducing alert routing as code.</li>
-        <li>Migrated application deployments from Concourse to reusable GitHub Actions workflows that inspect live Helm release state before cutover; added DORA reporting.</li>
-        <li>Improved production reliability through container memory right-sizing, Celery worker liveness checks, and a restore-tested backup programme for clinical documents.</li>
-        <li>Automated a production-grade, multi-instance on-prem DHIS2 deployment with Ansible, containerized services, HTTPS reverse-proxy routing, push-triggered deployment, and scheduled backup verification.</li>
-        <li>Established an on-premises Kubernetes environment on Proxmox to host development and staging workloads.</li>
-        <li>Set up private GitHub Actions runners inside a Kubernetes cluster so workflows can run alongside internal workloads.</li>
-      </ul>
-    </div>
-    <div class="timeline-item">
-      <span class="timeline-date">2022 – 2023</span>
-      <h3>Freelance DevOps Consultant</h3>
-      <p class="role-company"><a href="https://learndeo.ng" rel="noopener" target="_blank">LearnDeo</a></p>
-      <ul>
-        <li>Containerized and redeployed the e-learning platform, moving from a monolithic deployment to a portable Docker-based architecture.</li>
-        <li>Redesigned the deployment pipeline to support safer releases and faster product iteration, then documented the system for handover to the internal team.</li>
-      </ul>
-    </div>
-    <div class="timeline-item">
-      <span class="timeline-date">Nov 2021 – Jul 2022</span>
-      <h3>IT Lead &amp; Cloud Engineer</h3>
-      <p class="role-company">CUST Commodities West Africa · Abuja</p>
-      <ul>
-        <li>Deployed and maintained Odoo ERP and a laboratory management system on DigitalOcean, containerizing both with Docker for more consistent deployments.</li>
-        <li>Maintained the company website and digital assets, and managed network and compute resources to support reliable operations.</li>
-        <li>Trained staff on new technologies and internal digital tools.</li>
-      </ul>
-    </div>
-    <div class="timeline-item">
-      <h3>Solutions Architect / Cloud Engineer</h3>
-      <p class="role-company"><a href="https://dibia.cloud" rel="noopener" target="_blank">Dibia Solutions Limited</a> · Abuja</p>
-      <ul>
-        <li>Designed, built, and managed cloud infrastructure and deployment for web applications, including a scholars and alumni community platform, a voter-education platform, and solar sales and estimation tools.</li>
-        <li>Contributed to the infrastructure and delivery of Dibia's cloud application portfolio.</li>
-      </ul>
-    </div>
+    {experience.map((job) => (
+      <div class="timeline-item">
+        {job.date && <span class="timeline-date">{job.date}</span>}
+        <h3>{job.role}</h3>
+        <p class="role-company">
+          {job.url ? <a href={job.url} rel="noopener" target="_blank">{job.company}</a> : job.company}
+        </p>
+        <ul>{job.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+      </div>
+    ))}
   </div>
 </section>
 
 <section class="card section animate-on-scroll" id="volunteering">
   <p class="eyebrow"><span class="prompt">&gt;_</span> sharing what I learn</p>
   <h2>Volunteering &amp; Community</h2>
-  <ul>
-    <li>Cloud Track Mentor, Google Africa Developer Scholarship (2021).</li>
-    <li>Web Development Mentor, eHA Academy Cohort 6 (2024).</li>
-    <li>Member of the Internet Society Nigeria Chapter and its Rural Development Special Interest Group.</li>
-  </ul>
+  <ul>{volunteering.map((item) => <li>{item}.</li>)}</ul>
 </section>
 
 <section class="card section animate-on-scroll" id="education">
   <p class="eyebrow"><span class="prompt">&gt;_</span> continuous learning</p>
   <h2>Education &amp; Training</h2>
-  <ul>
-    <li>PhD in Computer Science (In View) – Nasarawa State University</li>
-    <li>MSc ICT – Bayero University Kano</li>
-    <li>Google Africa Developer Scholarship, Cloud Track (2020).</li>
-    <li>Web Design Fundamentals, eHA Academy (2020).</li>
-  </ul>
+  <ul>{education.map((item) => <li>{item}.</li>)}</ul>
 </section>

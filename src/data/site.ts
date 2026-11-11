@@ -10,7 +10,7 @@ export const SITE = {
   location: 'Nigeria',
   jobTitle: 'DevOps Engineer',
   employer: 'eHealth Africa',
-  resume: '/documents/David_Ikangbo_Resume.pdf',
+  resume: '/resume/',
   social: {
     linkedin: 'https://linkedin.com/in/david-ikangbo',
     github: 'https://github.com/Isorshe-ai',

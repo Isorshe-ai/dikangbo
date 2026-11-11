@@ -18,6 +18,6 @@ import { SITE } from '../data/site';
       <li><a href={SITE.social.github} rel="me noopener" target="_blank">GitHub</a></li>
       <li><a href={SITE.social.x} rel="me noopener" target="_blank">X</a></li>
     </ul>
-    <p><a class="btn" href={SITE.resume} download>Download Resume</a></p>
+    <p><a class="btn" href={`${SITE.resume}?print=true`}>Generate Resume PDF</a></p>
   </section>
 </BaseLayout>
