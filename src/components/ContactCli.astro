@@ -1,0 +1,11 @@
+---
+import { SITE } from '../data/site';
+---
+<div class="cli">
+  <p><span class="prompt">&gt;_</span> Email: <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+  <p><span class="prompt">&gt;_</span> Phone: {SITE.phone}</p>
+  <p><span class="prompt">&gt;_</span> Portfolio: <a href={SITE.url}>dikangbo.netlify.app</a></p>
+  <p><span class="prompt">&gt;_</span> LinkedIn: <a href={SITE.social.linkedin} rel="me noopener" target="_blank">profile</a></p>
+  <p><span class="prompt">&gt;_</span> GitHub: <a href={SITE.social.github} rel="me noopener" target="_blank">profile</a></p>
+  <p><span class="prompt">&gt;_</span> X: <a href={SITE.social.x} rel="me noopener" target="_blank">profile</a></p>
+</div>

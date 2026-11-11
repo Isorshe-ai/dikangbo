@@ -1,0 +1,179 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string; // path or absolute URL
+  type?: 'website' | 'article';
+  jsonLd?: object | object[];
+  noindex?: boolean;
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  section?: string;
+  tags?: string[];
+}
+const {
+  title, description = SITE.description, ogImage = '/og/default.png', type = 'website',
+  jsonLd, noindex = false, publishedTime, modifiedTime, section, tags = [],
+} = Astro.props;
+
+const fullTitle = title ? `${title} | ${SITE.name}` : SITE.title;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const image = new URL(ogImage, SITE.url).href;
+const sameAs = Object.values(SITE.social);
+
+const base = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${SITE.url}/#person`,
+    name: SITE.name,
+    url: SITE.url,
+    jobTitle: SITE.jobTitle,
+    worksFor: { '@type': 'Organization', name: SITE.employer },
+    email: `mailto:${SITE.email}`,
+    sameAs,
+    knowsAbout: ['DevOps', 'Platform Engineering', 'Site Reliability Engineering', 'Cloud Infrastructure', 'Terraform', 'Kubernetes', 'AWS', 'Google Cloud'],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${SITE.url}/#website`,
+    url: SITE.url,
+    name: SITE.name,
+    description: SITE.description,
+    publisher: { '@id': `${SITE.url}/#person` },
+  },
+];
+const graphs = [...base, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [])];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE.name} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — Articles`} href="/rss.xml" />
+    <meta name="theme-color" content="#121212" />
+
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title ?? SITE.title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title ?? SITE.title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    {type === 'article' && publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+    {type === 'article' && modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}
+    {type === 'article' && section && <meta property="article:section" content={section} />}
+    {type === 'article' && tags.map((t) => <meta property="article:tag" content={t} />)}
+    {type === 'article' && <meta property="article:author" content={SITE.name} />}
+
+    <script is:inline>
+      (function () {
+        try {
+          var s = localStorage.getItem('theme');
+          var dark = s ? s === 'dark' : true;
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
+    {graphs.map((g) => <script type="application/ld+json" set:html={JSON.stringify(g)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Navbar />
+    <slot name="hero" />
+    <main id="main" class="container"><slot /></main>
+    <slot name="after-main" />
+    <Footer />
+    <script is:inline>
+      (function () {
+        var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var typing = document.getElementById('typing-text');
+        var role = 'DevOps & Platform Engineer | Solutions Architect & Cloud Advocate';
+        var aboutCopy = document.querySelector('.about-copy');
+        var aboutText = aboutCopy ? aboutCopy.textContent.trim() : '';
+        var aboutTypingTimer = 0;
+
+        var typeAboutCopy = function () {
+          if (!aboutCopy) return;
+          window.clearTimeout(aboutTypingTimer);
+          aboutCopy.textContent = '';
+          var index = 0;
+          var typeNext = function () {
+            if (index >= aboutText.length) return;
+            aboutCopy.textContent += aboutText.charAt(index);
+            index += 1;
+            aboutTypingTimer = window.setTimeout(typeNext, 14);
+          };
+          typeNext();
+        };
+
+        if (typing) {
+          if (reducedMotion) {
+            typing.textContent = role;
+          } else {
+            var index = 0;
+            var typeNext = function () {
+              if (index >= role.length) return;
+              typing.textContent += role.charAt(index);
+              index += 1;
+              window.setTimeout(typeNext, 45);
+            };
+            window.setTimeout(typeNext, 450);
+          }
+        }
+
+        var revealItems = document.querySelectorAll('.animate-on-scroll');
+        if (!reducedMotion && 'IntersectionObserver' in window) {
+          document.documentElement.classList.add('motion-ready');
+          var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add('visible');
+              if (entry.target.id === 'about' && !reducedMotion) typeAboutCopy();
+              observer.unobserve(entry.target);
+            });
+          }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+          revealItems.forEach(function (item) { observer.observe(item); });
+        }
+
+        var tabs = document.querySelectorAll('.toggle-btn[data-view]');
+        tabs.forEach(function (tab) {
+          tab.addEventListener('click', function () {
+            var selected = tab.getAttribute('data-view');
+            window.clearTimeout(aboutTypingTimer);
+            tabs.forEach(function (item) {
+              var active = item === tab;
+              item.classList.toggle('active', active);
+              item.setAttribute('aria-selected', active ? 'true' : 'false');
+              var panel = document.getElementById(item.getAttribute('data-view') + '-view');
+              if (panel) panel.hidden = !active;
+            });
+            if (selected === 'recruiter' && aboutCopy) {
+              if (reducedMotion) aboutCopy.textContent = aboutText;
+              else typeAboutCopy();
+            }
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

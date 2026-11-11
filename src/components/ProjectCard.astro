@@ -1,0 +1,11 @@
+---
+import type { Project } from '../data/projects';
+interface Props { project: Project; }
+const { project } = Astro.props;
+---
+<div class="project-card">
+  <h3>{project.title}</h3>
+  <p>{project.summary}</p>
+  <p class="tech">{project.technologies.join(' · ')}</p>
+  <a class="more" href={`/projects/#${project.slug}`}>View Details</a>
+</div>

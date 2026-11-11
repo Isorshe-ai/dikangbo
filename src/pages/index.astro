@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import SkillsSummary from '../components/SkillsSummary.astro';
+import ExperienceEducation from '../components/ExperienceEducation.astro';
+import Certifications from '../components/Certifications.astro';
+import ContactCli from '../components/ContactCli.astro';
+import { projects } from '../data/projects';
+import { getPosts } from '../lib/posts';
+import { SITE } from '../data/site';
+
+const latest = (await getPosts()).slice(0, 3);
+---
+<BaseLayout>
+  <header class="hero" id="top" slot="hero">
+    <div class="hero-content">
+      <p class="eyebrow"><span class="prompt">&gt;_</span> cloud infrastructure / platform engineering</p>
+      <h1>Hi, I'm David.</h1>
+      <p class="subtitle"><span id="typing-text" aria-label="DevOps & Platform Engineer | Solutions Architect & Cloud Advocate"></span><span class="terminal-cursor" aria-hidden="true">_</span></p>
+      <p class="tagline">{SITE.tagline}</p>
+      <div class="cta-row">
+        <a class="btn" href="#projects">View Work <span aria-hidden="true">-&gt;</span></a>
+        <a class="btn btn-ghost" href={SITE.resume} download>Download CV</a>
+      </div>
+    </div>
+  </header>
+
+  <SkillsSummary />
+
+    <section class="card section animate-on-scroll" id="projects">
+      <p class="eyebrow"><span class="prompt">&gt;_</span> selected work</p>
+      <h2>Featured Projects</h2>
+      <div class="grid">{projects.slice(0, 3).map((p) => <ProjectCard project={p} />)}</div>
+      {projects.length > 3 && (
+        <details class="read-more">
+          <summary>
+            <span class="read-more-label">Read more projects ({projects.length - 3})</span>
+            <span class="read-less-label">Show fewer projects</span>
+          </summary>
+          <div class="grid read-more-content">{projects.slice(3).map((p) => <ProjectCard project={p} />)}</div>
+        </details>
+      )}
+    </section>
+
+    <ExperienceEducation />
+    <Certifications />
+
+    {latest.length > 0 && (
+      <section class="card section animate-on-scroll" id="blog">
+        <p class="eyebrow"><span class="prompt">&gt;_</span> notes from the field</p>
+        <h2>Recent Writings</h2>
+        <div class="grid">{latest.map((p) => <ArticleCard post={p} />)}</div>
+        <p class="section-more"><a href="/blog/">All articles</a> <span aria-hidden="true">/</span> <a href="/rss.xml">Subscribe via RSS</a></p>
+      </section>
+    )}
+
+    <section class="card section animate-on-scroll" id="contact">
+      <p class="eyebrow"><span class="prompt">&gt;_</span> let's connect</p>
+      <h2>Get in Touch</h2>
+      <ContactCli />
+      <p class="section-more"><a href="/contact/">Send a message</a></p>
+    </section>
+</BaseLayout>

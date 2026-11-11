@@ -1,0 +1,12 @@
+---
+import { SITE } from '../data/site';
+---
+<footer class="site-footer">
+  <ul class="social" aria-label="Social links">
+    <li><a href={SITE.social.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
+    <li><a href={SITE.social.github} rel="me noopener" target="_blank">GitHub</a></li>
+    <li><a href={SITE.social.x} rel="me noopener" target="_blank">X</a></li>
+    <li><a href="/rss.xml">RSS</a></li>
+  </ul>
+  <p>&copy; {new Date().getFullYear()} {SITE.name}</p>
+</footer>

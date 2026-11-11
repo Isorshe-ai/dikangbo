@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SkillsSummary from '../components/SkillsSummary.astro';
+import ExperienceEducation from '../components/ExperienceEducation.astro';
+import Certifications from '../components/Certifications.astro';
+import { SITE } from '../data/site';
+---
+<BaseLayout title="About" description="Learn about David Ikangbo, a DevOps and Platform Engineer building secure, reliable cloud platforms across healthcare, financial services and mission-driven organizations.">
+  <h1 class="page-title">About</h1>
+  <p class="lede">I’m a DevOps and Platform Engineer focused on making cloud infrastructure more secure, reliable, and easier to operate. My work spans Kubernetes, AWS and Google Cloud, CI/CD automation, secrets management, observability, and backup and recovery. Across healthcare, financial services, and mission-driven organizations, I’ve helped teams improve production reliability and reduce operational friction. I also enjoy mentoring aspiring developers and supporting technology communities.</p>
+  <SkillsSummary />
+  <ExperienceEducation />
+  <Certifications />
+  <section class="card" id="elsewhere">
+    <h2>Elsewhere</h2>
+    <ul class="social">
+      <li><a href={SITE.social.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
+      <li><a href={SITE.social.github} rel="me noopener" target="_blank">GitHub</a></li>
+      <li><a href={SITE.social.x} rel="me noopener" target="_blank">X</a></li>
+    </ul>
+    <p><a class="btn" href={SITE.resume} download>Download Resume</a></p>
+  </section>
+</BaseLayout>

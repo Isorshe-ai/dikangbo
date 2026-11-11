@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { projects } from '../data/projects';
+---
+<BaseLayout title="Projects" description="Engineering projects by David Ikangbo across cloud automation, on-prem DHIS2, Proxmox and Kubernetes, private CI runners, Vault, observability and backup recovery.">
+  <h1 class="page-title">Projects</h1>
+  <p class="lede">Each project is written as a short case study: the problem, the architecture, the technologies and what changed.</p>
+  {projects.slice(0, 3).map((p) => (
+    <section class="card" id={p.slug}>
+      <h2>{p.title}</h2>
+      <p>{p.summary}</p>
+      <dl class="case">
+        <dt>Problem</dt><dd>{p.problem}</dd>
+        <dt>Architecture</dt><dd>{p.architecture}</dd>
+        <dt>Technologies</dt>
+        <dd><ul class="chips">{p.technologies.map((t) => <li class="chip">{t}</li>)}</ul></dd>
+        <dt>Outcomes</dt>
+        <dd><ul>{p.outcomes.map((o) => <li>{o}</li>)}</ul></dd>
+      </dl>
+    </section>
+  ))}
+  {projects.length > 3 && (
+    <details class="read-more project-read-more">
+      <summary>
+        <span class="read-more-label">Read more projects ({projects.length - 3})</span>
+        <span class="read-less-label">Show fewer projects</span>
+      </summary>
+      <div class="project-list-more">
+        {projects.slice(3).map((p) => (
+          <section class="card" id={p.slug}>
+            <h2>{p.title}</h2>
+            <p>{p.summary}</p>
+            <dl class="case">
+              <dt>Problem</dt><dd>{p.problem}</dd>
+              <dt>Architecture</dt><dd>{p.architecture}</dd>
+              <dt>Technologies</dt>
+              <dd><ul class="chips">{p.technologies.map((t) => <li class="chip">{t}</li>)}</ul></dd>
+              <dt>Outcomes</dt>
+              <dd><ul>{p.outcomes.map((o) => <li>{o}</li>)}</ul></dd>
+            </dl>
+          </section>
+        ))}
+      </div>
+    </details>
+  )}
+</BaseLayout>
+<script is:inline>
+  (function () {
+    var revealProject = function () {
+      if (!location.hash) return;
+      var target = document.getElementById(location.hash.slice(1));
+      if (!target) return;
+      var disclosure = target.closest('.project-read-more');
+      if (disclosure) disclosure.open = true;
+      window.requestAnimationFrame(function () {
+        target.scrollIntoView({ block: 'start' });
+      });
+    };
+    if (document.readyState === 'complete') {
+      revealProject();
+    } else {
+      window.addEventListener('load', revealProject, { once: true });
+    }
+    window.addEventListener('hashchange', revealProject);
+  })();
+</script>

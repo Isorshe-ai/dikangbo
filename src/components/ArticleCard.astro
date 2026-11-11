@@ -1,0 +1,24 @@
+---
+import type { Post } from '../lib/posts';
+import { readingTime, formatDate } from '../lib/posts';
+import { slugify } from '../data/site';
+interface Props { post: Post; }
+const { post } = Astro.props;
+const { data } = post;
+const search = [data.title, data.description, data.category, ...data.tags].join(' ').toLowerCase();
+---
+<article class="article-card" data-search={search} data-category={data.category}>
+  <div class="meta">
+    <a class="chip cat" href={`/blog/category/${slugify(data.category)}/`}>{data.category}</a>
+    <time datetime={data.pubDate.toISOString()}>{formatDate(data.pubDate)}</time>
+    <span>{readingTime(post.body)} min read</span>
+  </div>
+  <h3><a href={`/blog/${post.id}/`}>{data.title}</a></h3>
+  <p>{data.description}</p>
+  {data.tags.length > 0 && (
+    <ul class="chips" aria-label="Tags">
+      {data.tags.map((t) => <li><a class="chip" href={`/blog/tag/${slugify(t)}/`}>{t}</a></li>)}
+    </ul>
+  )}
+  <a class="more" href={`/blog/${post.id}/`}>Read More<span class="sr-only"> about {data.title}</span></a>
+</article>

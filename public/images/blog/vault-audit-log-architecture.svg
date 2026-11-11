@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img" aria-labelledby="title desc">
+  <title id="title">Tiered Vault audit logging architecture</title>
+  <desc id="desc">Vault audit events flow to Cloud Logging. Every event is archived in Cloud Storage. A hot query tier receives all other events and a five percent sample of a high-volume machine client. BigQuery queries the cold archive, while a sample heartbeat feeds a missing-data alert.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#70d8ee"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#83e6b5"/>
+    </marker>
+    <style>
+      text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#edf5fa}
+      .title{font-size:25px;font-weight:700}
+      .label{font-size:17px;font-weight:700}
+      .copy{font-size:14px;fill:#b8c8d3}
+      .small{font-size:12px;fill:#b8c8d3}
+      .box{fill:#172632;stroke:#3a596b;stroke-width:1.5}
+      .accent{stroke:#70d8ee;stroke-width:2.5;fill:none;marker-end:url(#arrow)}
+      .green{stroke:#83e6b5;stroke-width:2.5;fill:none;marker-end:url(#arrow-green)}
+    </style>
+  </defs>
+  <rect width="1000" height="560" rx="18" fill="#0c141b"/>
+  <text x="40" y="52" class="title">Keep the record. Change where it stays hot.</text>
+  <text x="40" y="78" class="copy">Two retention and query paths from one audit stream</text>
+
+  <rect x="40" y="205" width="170" height="110" rx="12" class="box"/>
+  <text x="125" y="244" text-anchor="middle" class="label">Vault</text>
+  <text x="125" y="270" text-anchor="middle" class="copy">Audit devices</text>
+  <text x="125" y="291" text-anchor="middle" class="small">All audit events</text>
+
+  <rect x="285" y="205" width="190" height="110" rx="12" class="box"/>
+  <text x="380" y="244" text-anchor="middle" class="label">Cloud Logging</text>
+  <text x="380" y="270" text-anchor="middle" class="copy">Central event stream</text>
+  <text x="380" y="291" text-anchor="middle" class="small">Routing and filters</text>
+
+  <path d="M210 260H279" class="accent"/>
+  <text x="244" y="246" text-anchor="middle" class="small">events</text>
+
+  <rect x="575" y="110" width="190" height="125" rx="12" class="box"/>
+  <text x="670" y="151" text-anchor="middle" class="label">Cold archive</text>
+  <text x="670" y="178" text-anchor="middle" class="copy">Cloud Storage</text>
+  <text x="670" y="200" text-anchor="middle" class="small">Complete audit stream</text>
+
+  <rect x="810" y="110" width="150" height="125" rx="12" class="box"/>
+  <text x="885" y="151" text-anchor="middle" class="label">BigQuery</text>
+  <text x="885" y="178" text-anchor="middle" class="copy">Historical queries</text>
+  <text x="885" y="200" text-anchor="middle" class="small">Normalized timestamps</text>
+
+  <path d="M475 230C520 230 520 172 568 172" class="green"/>
+  <text x="516" y="191" text-anchor="middle" class="small">all events</text>
+  <path d="M765 172H803" class="accent"/>
+  <text x="784" y="157" text-anchor="middle" class="small">query</text>
+
+  <rect x="575" y="335" width="190" height="125" rx="12" class="box"/>
+  <text x="670" y="376" text-anchor="middle" class="label">Hot query tier</text>
+  <text x="670" y="403" text-anchor="middle" class="copy">Operational searches</text>
+  <text x="670" y="425" text-anchor="middle" class="small">Other events + 5% sample</text>
+
+  <rect x="810" y="335" width="150" height="125" rx="12" class="box"/>
+  <text x="885" y="376" text-anchor="middle" class="label">Heartbeat</text>
+  <text x="885" y="403" text-anchor="middle" class="copy">Sample monitor</text>
+  <text x="885" y="425" text-anchor="middle" class="small">Alert on missing signal</text>
+
+  <path d="M475 285C520 285 520 397 568 397" class="accent"/>
+  <text x="515" y="341" text-anchor="middle" class="small">filtered stream</text>
+  <path d="M765 397H803" class="accent"/>
+  <text x="784" y="382" text-anchor="middle" class="small">sample</text>
+
+  <rect x="285" y="480" width="675" height="42" rx="9" fill="#132820" stroke="#3b785a"/>
+  <text x="622" y="507" text-anchor="middle" class="copy">A sampled operational signal; the complete event record remains in the cold archive.</text>
+</svg>

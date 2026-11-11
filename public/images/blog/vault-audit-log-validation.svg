@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 430" role="img" aria-labelledby="title desc">
+  <title id="title">Audit-log tiering validation workflow</title>
+  <desc id="desc">Before changing routing, reconcile more than one million entries against the complete archive. Then verify the hot tier contains other events plus the intended sample, test a heartbeat alert, and account for timestamp precision and late-arriving files in historical queries.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#70d8ee"/>
+    </marker>
+    <style>
+      text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#edf5fa}
+      .title{font-size:24px;font-weight:700}
+      .label{font-size:16px;font-weight:700}
+      .copy{font-size:13px;fill:#b8c8d3}
+      .box{fill:#172632;stroke:#3a596b;stroke-width:1.5}
+      .arrow{stroke:#70d8ee;stroke-width:2.5;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1000" height="430" rx="18" fill="#0c141b"/>
+  <text x="40" y="52" class="title">Prove the route before relying on the savings</text>
+
+  <rect x="40" y="115" width="205" height="130" rx="12" class="box"/>
+  <text x="142" y="153" text-anchor="middle" class="label">1. Reconcile</text>
+  <text x="142" y="180" text-anchor="middle" class="copy">Compare 1M+ entries</text>
+  <text x="142" y="201" text-anchor="middle" class="copy">with the full archive</text>
+  <text x="142" y="224" text-anchor="middle" class="copy">before narrowing hot logs</text>
+
+  <rect x="285" y="115" width="205" height="130" rx="12" class="box"/>
+  <text x="387" y="153" text-anchor="middle" class="label">2. Verify routing</text>
+  <text x="387" y="180" text-anchor="middle" class="copy">Other events stay hot</text>
+  <text x="387" y="201" text-anchor="middle" class="copy">5% client sample stays hot</text>
+  <text x="387" y="224" text-anchor="middle" class="copy">all events stay archived</text>
+
+  <rect x="530" y="115" width="205" height="130" rx="12" class="box"/>
+  <text x="632" y="153" text-anchor="middle" class="label">3. Monitor signal</text>
+  <text x="632" y="180" text-anchor="middle" class="copy">Treat the sample as</text>
+  <text x="632" y="201" text-anchor="middle" class="copy">a heartbeat, and alert</text>
+  <text x="632" y="224" text-anchor="middle" class="copy">when it stops arriving</text>
+
+  <rect x="775" y="115" width="185" height="130" rx="12" class="box"/>
+  <text x="867" y="153" text-anchor="middle" class="label">4. Query carefully</text>
+  <text x="867" y="180" text-anchor="middle" class="copy">Normalize nanosecond</text>
+  <text x="867" y="201" text-anchor="middle" class="copy">timestamps; allow for</text>
+  <text x="867" y="224" text-anchor="middle" class="copy">late hourly files</text>
+
+  <path d="M245 180H278" class="arrow"/>
+  <path d="M490 180H523" class="arrow"/>
+  <path d="M735 180H768" class="arrow"/>
+
+  <rect x="40" y="290" width="920" height="82" rx="12" fill="#132820" stroke="#3b785a"/>
+  <text x="66" y="323" class="label">Decision rule</text>
+  <text x="66" y="349" class="copy">Do not treat a quiet hot tier as proof of missing events until routing, sampling, archive completeness, timestamp handling, and ingestion delay have been checked.</text>
+</svg>

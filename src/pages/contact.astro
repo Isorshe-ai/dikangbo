@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactCli from '../components/ContactCli.astro';
+---
+<BaseLayout title="Contact" description="Contact David Ikangbo about DevOps, platform engineering and cloud infrastructure work.">
+  <h1 class="page-title">Contact</h1>
+  <section class="card" id="contact">
+    <h2>Find me</h2>
+    <ContactCli />
+  </section>
+  <section class="card" id="contact-form">
+    <h2>Send a Message</h2>
+    <form name="contact" method="POST" action="/contact-success/" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="contact" />
+      <p class="hp"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+      <label for="name">Name</label>
+      <input id="name" type="text" name="name" autocomplete="name" required />
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email" autocomplete="email" required />
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="5" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </section>
+</BaseLayout>

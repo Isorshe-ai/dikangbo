@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 590" role="img" aria-labelledby="title desc">
+  <title id="title">Automated multi-instance DHIS2 on-premises architecture</title>
+  <desc id="desc">Ansible and encrypted configuration manage a Linux host with multiple DHIS2 containers and shared PostgreSQL/PostGIS. NGINX routes HTTPS to the instances, systemd manages service lifecycle, a private GitHub Actions runner triggers scoped Ansible deployments, and backup automation verifies recoverability.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#70d8ee"/>
+    </marker>
+    <marker id="green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#83e6b5"/>
+    </marker>
+    <style>
+      text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#edf5fa}
+      .title{font-size:24px;font-weight:700}
+      .label{font-size:16px;font-weight:700}
+      .copy{font-size:13px;fill:#b8c8d3}
+      .small{font-size:11px;fill:#b8c8d3}
+      .box{fill:#172632;stroke:#3a596b;stroke-width:1.5}
+      .host{fill:#101c25;stroke:#70d8ee;stroke-width:2}
+      .arrow{stroke:#70d8ee;stroke-width:2.5;fill:none;marker-end:url(#arrow)}
+      .green{stroke:#83e6b5;stroke-width:2.5;fill:none;marker-end:url(#green)}
+    </style>
+  </defs>
+  <rect width="1000" height="590" rx="18" fill="#0c141b"/>
+  <text x="35" y="46" class="title">Multi-instance DHIS2: automate the host, scope each release</text>
+
+  <rect x="35" y="105" width="190" height="105" rx="12" class="box"/>
+  <text x="130" y="142" text-anchor="middle" class="label">GitHub Actions</text>
+  <text x="130" y="166" text-anchor="middle" class="copy">Change detection</text>
+  <text x="130" y="188" text-anchor="middle" class="small">Deploy changed instance</text>
+
+  <rect x="35" y="270" width="190" height="105" rx="12" class="box"/>
+  <text x="130" y="307" text-anchor="middle" class="label">Ansible control</text>
+  <text x="130" y="331" text-anchor="middle" class="copy">Reusable roles</text>
+  <text x="130" y="353" text-anchor="middle" class="small">Encrypted configuration</text>
+  <path d="M130 210V263" class="arrow"/>
+  <text x="143" y="243" class="small">workflow</text>
+
+  <rect x="270" y="95" width="690" height="405" rx="16" class="host"/>
+  <text x="295" y="128" class="label">On-premises Linux host</text>
+
+  <rect x="305" y="155" width="175" height="92" rx="10" class="box"/>
+  <text x="392" y="190" text-anchor="middle" class="label">Private runner</text>
+  <text x="392" y="214" text-anchor="middle" class="copy">GitHub Actions job</text>
+  <path d="M225 322C265 322 270 201 298 201" class="green"/>
+
+  <rect x="525" y="155" width="180" height="92" rx="10" class="box"/>
+  <text x="615" y="190" text-anchor="middle" class="label">NGINX</text>
+  <text x="615" y="214" text-anchor="middle" class="copy">HTTPS virtual hosts</text>
+  <path d="M480 201H518" class="arrow"/>
+  <text x="500" y="186" text-anchor="middle" class="small">HTTPS</text>
+
+  <rect x="750" y="145" width="180" height="115" rx="10" class="box"/>
+  <text x="840" y="179" text-anchor="middle" class="label">DHIS2 instances</text>
+  <text x="840" y="204" text-anchor="middle" class="copy">Containerized services</text>
+  <text x="840" y="228" text-anchor="middle" class="small">Versioned per instance</text>
+  <path d="M705 201H743" class="arrow"/>
+
+  <rect x="525" y="300" width="180" height="95" rx="10" class="box"/>
+  <text x="615" y="338" text-anchor="middle" class="label">PostgreSQL</text>
+  <text x="615" y="363" text-anchor="middle" class="copy">PostGIS enabled</text>
+  <path d="M840 260C840 340 750 347 712 347" class="arrow"/>
+
+  <rect x="750" y="300" width="180" height="95" rx="10" class="box"/>
+  <text x="840" y="338" text-anchor="middle" class="label">systemd</text>
+  <text x="840" y="363" text-anchor="middle" class="copy">Service lifecycle</text>
+  <path d="M840 260V293" class="arrow"/>
+
+  <rect x="305" y="420" width="400" height="55" rx="10" class="box"/>
+  <text x="505" y="453" text-anchor="middle" class="label">Ansible convergence: host · proxy · instances · database</text>
+  <path d="M392 247V412" class="green"/>
+
+  <rect x="750" y="420" width="180" height="55" rx="10" class="box"/>
+  <text x="840" y="443" text-anchor="middle" class="label">Backup &amp; verify</text>
+  <text x="840" y="462" text-anchor="middle" class="small">Database + files · restore path</text>
+  <path d="M705 448H743" class="green"/>
+
+  <text x="35" y="540" class="copy">Release gate: scoped converge → HTTPS health check → backup verification → tested restore procedure</text>
+</svg>

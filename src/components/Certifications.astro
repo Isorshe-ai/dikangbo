@@ -1,0 +1,275 @@
+---
+import { certifications } from '../data/certifications';
+import type { Certification } from '../data/certifications';
+const dev = import.meta.env.DEV;
+const providers = [...new Set(certifications.map((certification) => certification.group))].sort();
+const categories = [...new Set(certifications.map((certification) => certification.category).filter(Boolean))].sort();
+const groups = certifications.reduce<{
+  name: string;
+  latest: string;
+  batches: { name: string; latest: string; items: Certification[] }[];
+}[]>((result, certification) => {
+  let group = result.find((item) => item.name === certification.group);
+  if (!group) {
+    group = { name: certification.group, latest: '', batches: [] };
+    result.push(group);
+  }
+  if (certification.issued && certification.issued > group.latest) group.latest = certification.issued;
+
+  let batch = group.batches.find((item) => item.name === certification.batch);
+  if (!batch) {
+    batch = { name: certification.batch, latest: '', items: [] };
+    group.batches.push(batch);
+  }
+  if (certification.issued && certification.issued > batch.latest) batch.latest = certification.issued;
+  batch.items.push(certification);
+  return result;
+}, []).sort((a, b) => b.latest.localeCompare(a.latest));
+
+for (const group of groups) {
+  group.batches.sort((a, b) => b.latest.localeCompare(a.latest));
+  for (const batch of group.batches) {
+    batch.items.sort((a, b) => (b.issued ?? '').localeCompare(a.issued ?? '') || a.name.localeCompare(b.name));
+  }
+}
+---
+{certifications.length > 0 ? (
+  <section class="card section animate-on-scroll" id="certifications">
+    <p class="eyebrow"><span class="prompt">&gt;_</span> credentials &amp; learning</p>
+    <div class="section-heading">
+      <div>
+        <h2>Certifications &amp; Badges</h2>
+        <p class="cert-source">Browse by provider, batch, or technology. <a href="https://www.credly.com/users/david-ikangbo/badges" rel="noopener" target="_blank">View full Credly profile</a>.</p>
+      </div>
+      <div class="view-toggle cert-view-toggle" role="tablist" aria-label="Certification view">
+        <button class="toggle-btn active" id="cert-list-tab" type="button" role="tab" aria-selected="true" aria-controls="cert-list-view" data-cert-view="list">List</button>
+        <button class="toggle-btn" id="cert-map-tab" type="button" role="tab" aria-selected="false" aria-controls="cert-map-view" data-cert-view="map">Diagram</button>
+      </div>
+    </div>
+
+    <div class="cert-controls" aria-label="Filter and sort credentials">
+      <label class="cert-search">Search
+        <input type="search" data-cert-search placeholder="Search certificates or badges" />
+      </label>
+      <label>Provider
+        <select data-cert-provider>
+          <option value="">All providers</option>
+          {providers.map((provider) => <option value={provider}>{provider}</option>)}
+        </select>
+      </label>
+      <label>Technology
+        <select data-cert-category>
+          <option value="">All technologies</option>
+          {categories.map((category) => <option value={category}>{category}</option>)}
+        </select>
+      </label>
+      <label>Sort
+        <select data-cert-sort>
+          <option value="newest">Most recent</option>
+          <option value="oldest">Oldest</option>
+          <option value="name">Name A–Z</option>
+        </select>
+      </label>
+      <p class="cert-result-count" data-cert-count aria-live="polite">{certifications.length} credentials</p>
+    </div>
+
+    <div class="cert-view" id="cert-list-view" role="tabpanel" aria-labelledby="cert-list-tab" data-cert-panel="list">
+      <div class="cert-groups">
+        {groups.map((group, groupIndex) => {
+          const count = group.batches.reduce((total, batch) => total + batch.items.length, 0);
+          return (
+            <details class="cert-group" data-cert-group data-provider={group.name} data-latest={group.latest} data-name={group.name} open={groupIndex === 0} data-default-open={groupIndex === 0 ? 'true' : 'false'}>
+              <summary>
+                <span>{group.name}</span>
+                <span class="cert-group-meta">{count} credentials · latest {group.latest}</span>
+              </summary>
+              <div class="cert-group-content">
+                {group.batches.map((batch, batchIndex) => (
+                  <details class="cert-batch" data-cert-batch data-latest={batch.latest} data-name={batch.name} open={groupIndex === 0 && batchIndex === 0} data-default-open={groupIndex === 0 && batchIndex === 0 ? 'true' : 'false'}>
+                    <summary>{batch.name}<span class="cert-batch-meta">{batch.items.length} · latest {batch.latest}</span></summary>
+                    <ul class="cert-list">
+                      {batch.items.map((certification) => (
+                        <li
+                          class="cert cert-entry"
+                          data-provider={certification.group}
+                          data-category={certification.category ?? 'Other'}
+                          data-issued={certification.issued ?? ''}
+                          data-name={certification.name}
+                          data-search={`${certification.name} ${certification.issuer} ${certification.group} ${certification.batch} ${certification.category ?? ''}`.toLowerCase()}
+                        >
+                          <strong>{certification.credentialUrl ? <a href={certification.credentialUrl} rel="noopener" target="_blank">{certification.name}</a> : certification.name}</strong>
+                          <span class="tech">{certification.issuer}{certification.issued ? ` · ${certification.issued}` : ''}{certification.expires ? ` · expires ${certification.expires}` : ''}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                ))}
+              </div>
+            </details>
+          );
+        })}
+      </div>
+      <p class="cert-empty" data-cert-empty hidden>No credentials match those filters. Try a different search or filter.</p>
+    </div>
+
+    <div class="cert-view" id="cert-map-view" role="tabpanel" aria-labelledby="cert-map-tab" data-cert-panel="map" hidden>
+      <div class="cert-map" aria-label="Credentials grouped by provider and batch">
+        {groups.map((group) => (
+          <section class="cert-map-provider" data-cert-group data-provider={group.name} data-latest={group.latest} data-name={group.name}>
+            <h3>{group.name}</h3>
+            <div class="cert-map-batches">
+              {group.batches.map((batch) => (
+                <section class="cert-map-batch" data-cert-batch data-latest={batch.latest} data-name={batch.name}>
+                  <h4>{batch.name}</h4>
+                  <ul class="cert-map-items">
+                    {batch.items.map((certification) => (
+                      <li
+                        class="cert-map-item cert-entry"
+                        data-provider={certification.group}
+                        data-category={certification.category ?? 'Other'}
+                        data-issued={certification.issued ?? ''}
+                        data-name={certification.name}
+                        data-search={`${certification.name} ${certification.issuer} ${certification.group} ${certification.batch} ${certification.category ?? ''}`.toLowerCase()}
+                      >
+                        <strong>{certification.credentialUrl ? <a href={certification.credentialUrl} rel="noopener" target="_blank">{certification.name}</a> : certification.name}</strong>
+                        <span class="tech">{certification.issued ?? 'Date not listed'}{certification.expires ? ` · expires ${certification.expires}` : ''}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+      <p class="cert-empty" data-cert-empty hidden>No credentials match those filters. Try a different search or filter.</p>
+    </div>
+  </section>
+) : dev ? (
+  <section class="card" id="certifications">
+    <h2>Certifications</h2>
+    <p class="empty">Dev-only notice: add your credentials in <code>src/data/certifications.ts</code>. This section is hidden in production until you do.</p>
+  </section>
+) : null}
+
+<script is:inline>
+  (() => {
+    const section = document.getElementById('certifications');
+    if (!section) return;
+
+    const search = section.querySelector('[data-cert-search]');
+    const provider = section.querySelector('[data-cert-provider]');
+    const category = section.querySelector('[data-cert-category]');
+    const sort = section.querySelector('[data-cert-sort]');
+    const count = section.querySelector('[data-cert-count]');
+    const entries = Array.from(section.querySelectorAll('.cert-entry'));
+    const sortChildren = (container, selector, direction) => {
+      Array.from(container.querySelectorAll(`:scope > ${selector}`))
+        .sort((a, b) => {
+          const nameOrder = a.dataset.name.localeCompare(b.dataset.name);
+          if (direction === 'name') return nameOrder;
+          const dateOrder = (a.dataset.latest || '').localeCompare(b.dataset.latest || '');
+          return direction === 'oldest' ? dateOrder || nameOrder : -dateOrder || nameOrder;
+        })
+        .forEach((item) => container.append(item));
+    };
+
+    const update = () => {
+      const query = search.value.trim().toLowerCase();
+      const providerValue = provider.value;
+      const categoryValue = category.value;
+      const direction = sort.value;
+      let matches = 0;
+
+      entries.forEach((entry) => {
+        const visible = (!query || entry.dataset.search.includes(query))
+          && (!providerValue || entry.dataset.provider === providerValue)
+          && (!categoryValue || entry.dataset.category === categoryValue);
+        entry.hidden = !visible;
+        if (visible && entry.closest('[data-cert-panel="list"]')) matches += 1;
+      });
+
+      section.querySelectorAll('[data-cert-panel]').forEach((panel) => {
+        panel.querySelectorAll('[data-cert-batch], .cert-map-batch').forEach((batch) => {
+          const batchEntries = batch.querySelectorAll('.cert-entry');
+          const hasVisible = Array.from(batchEntries).some((entry) => !entry.hidden);
+          batch.hidden = !hasVisible;
+          if (panel.dataset.certPanel === 'list' && (query || providerValue || categoryValue)) {
+            const disclosure = batch;
+            if (hasVisible) disclosure.open = true;
+          }
+          const list = batch.querySelector('.cert-list, .cert-map-items');
+          if (list) {
+            Array.from(list.children)
+              .sort((a, b) => {
+                const names = a.dataset.name.localeCompare(b.dataset.name);
+                if (direction === 'name') return names;
+                const dates = (a.dataset.issued || '').localeCompare(b.dataset.issued || '');
+                return direction === 'oldest' ? dates || names : -dates || names;
+              })
+              .forEach((item) => list.append(item));
+          }
+        });
+
+        panel.querySelectorAll('[data-cert-group]').forEach((group) => {
+          const hasVisible = Array.from(group.querySelectorAll('.cert-entry')).some((entry) => !entry.hidden);
+          group.hidden = !hasVisible;
+          if (panel.dataset.certPanel === 'list' && (query || providerValue || categoryValue) && hasVisible) group.open = true;
+          const content = group.querySelector('.cert-group-content, .cert-map-batches');
+          if (content) {
+            sortChildren(content, panel.dataset.certPanel === 'list' ? '[data-cert-batch]' : '.cert-map-batch', direction);
+          }
+        });
+
+        const root = panel.querySelector('.cert-groups, .cert-map');
+        if (root) sortChildren(root, panel.dataset.certPanel === 'list' ? '[data-cert-group]' : '.cert-map-provider', direction);
+      });
+
+      count.textContent = `${matches} ${matches === 1 ? 'credential' : 'credentials'}`;
+      section.querySelectorAll('[data-cert-empty]').forEach((message) => { message.hidden = matches > 0; });
+
+      if (!query && !providerValue && !categoryValue) {
+        section.querySelectorAll('[data-cert-panel="list"] [data-cert-group], [data-cert-panel="list"] [data-cert-batch]').forEach((disclosure) => {
+          disclosure.open = disclosure.dataset.defaultOpen === 'true';
+        });
+      }
+    };
+
+    [search, provider, category, sort].forEach((control) => {
+      control.addEventListener(control === search ? 'input' : 'change', update);
+    });
+
+    const tabs = Array.from(section.querySelectorAll('[data-cert-view]'));
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const selected = tab.dataset.certView;
+        tabs.forEach((item) => {
+          const active = item === tab;
+          item.classList.toggle('active', active);
+          item.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        section.querySelectorAll('[data-cert-panel]').forEach((panel) => {
+          panel.hidden = panel.dataset.certPanel !== selected;
+        });
+      });
+      tab.addEventListener('keydown', (event) => {
+        const index = tabs.indexOf(tab);
+        const nextIndex = event.key === 'ArrowRight' || event.key === 'ArrowDown'
+          ? (index + 1) % tabs.length
+          : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+            ? (index - 1 + tabs.length) % tabs.length
+            : event.key === 'Home'
+              ? 0
+              : event.key === 'End'
+                ? tabs.length - 1
+                : -1;
+        if (nextIndex < 0) return;
+        event.preventDefault();
+        tabs[nextIndex].focus();
+        tabs[nextIndex].click();
+      });
+    });
+
+    update();
+  })();
+</script>

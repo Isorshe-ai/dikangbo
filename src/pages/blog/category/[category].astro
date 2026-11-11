@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import { getPosts } from '../../../lib/posts';
+import { CATEGORIES, slugify } from '../../../data/site';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return CATEGORIES.filter((c) => posts.some((p) => p.data.category === c)).map((c) => ({
+    params: { category: slugify(c) },
+    props: { name: c, posts: posts.filter((p) => p.data.category === c) },
+  }));
+}
+const { name, posts } = Astro.props;
+---
+<BaseLayout title={`${name} articles`} description={`Articles about ${name} by David Ikangbo.`}>
+  <p class="breadcrumb"><a href="/blog/">Blog</a> / Category</p>
+  <h1 class="page-title">{name}</h1>
+  <div class="grid">{posts.map((p) => <ArticleCard post={p} />)}</div>
+</BaseLayout>

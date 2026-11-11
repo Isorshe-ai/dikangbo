@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getPosts, allTags } from '../../lib/posts';
+import { CATEGORIES, SITE, slugify } from '../../data/site';
+
+const posts = await getPosts();
+const tags = allTags(posts).slice(0, 12);
+const cats = CATEGORIES.filter((c) => posts.some((p) => p.data.category === c));
+const jsonLd = {
+  '@context': 'https://schema.org', '@type': 'Blog', name: `${SITE.name} — Engineering Blog`,
+  url: `${SITE.url}/blog/`, author: { '@id': `${SITE.url}/#person` },
+};
+---
+<BaseLayout title="Blog" description="Articles on DevOps, platform engineering, SRE, cloud infrastructure and security, with code, diagrams and references." jsonLd={jsonLd}>
+  <h1 class="page-title">Blog</h1>
+  <p class="lede">Engineering notes on DevOps, platform engineering, SRE, cloud and security. <a href="/rss.xml">Subscribe via RSS</a>.</p>
+
+  <section class="search" aria-label="Search and filter articles">
+    <label for="q" class="sr-only">Search articles</label>
+    <input id="q" type="search" placeholder="Search articles by topic, e.g. terraform, secrets, OIDC" autocomplete="off" />
+    <div class="filters" role="group" aria-label="Filter by category">
+      <button type="button" class="chip" data-cat="" aria-pressed="true">All</button>
+      {cats.map((c) => <button type="button" class="chip" data-cat={c} aria-pressed="false">{c}</button>)}
+    </div>
+    <p class="meta" id="count" role="status" aria-live="polite">{posts.length} {posts.length === 1 ? 'article' : 'articles'}</p>
+  </section>
+
+  <div class="grid" id="list">{posts.map((p) => <ArticleCard post={p} />)}</div>
+  <p class="empty" id="none" hidden>No articles match. Try a broader term or clear the category filter.</p>
+
+  <section class="card" aria-labelledby="browse">
+    <h2 id="browse">Browse</h2>
+    <p class="meta">Categories</p>
+    <ul class="chips">{cats.map((c) => <li><a class="chip cat" href={`/blog/category/${slugify(c)}/`}>{c}</a></li>)}</ul>
+    {tags.length > 0 && (<>
+      <p class="meta" style="margin-top:1rem">Popular tags</p>
+      <ul class="chips">{tags.map(([t, n]) => <li><a class="chip" href={`/blog/tag/${slugify(t)}/`}>{t} ({n})</a></li>)}</ul>
+    </>)}
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    var q = document.getElementById('q'), list = document.getElementById('list');
+    var none = document.getElementById('none'), count = document.getElementById('count');
+    var cards = Array.prototype.slice.call(list.children);
+    var btns = Array.prototype.slice.call(document.querySelectorAll('.filters button'));
+    var cat = '';
+    function apply() {
+      var terms = q.value.toLowerCase().split(/\s+/).filter(Boolean), n = 0;
+      cards.forEach(function (c) {
+        var hay = c.getAttribute('data-search') || '';
+        var ok = terms.every(function (t) { return hay.indexOf(t) !== -1; }) && (!cat || c.getAttribute('data-category') === cat);
+        c.hidden = !ok; if (ok) n++;
+      });
+      none.hidden = n !== 0;
+      count.textContent = n + (n === 1 ? ' article' : ' articles');
+    }
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        cat = b.getAttribute('data-cat');
+        btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+        apply();
+      });
+    });
+    q.addEventListener('input', apply);
+    var init = new URLSearchParams(location.search).get('q'); if (init) { q.value = init; apply(); }
+  })();
+</script>
