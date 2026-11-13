@@ -10,14 +10,15 @@ import { education, experience, volunteering } from '../data/resume';
         {job.date && <span class="timeline-date">{job.date}</span>}
         <h3>{job.role}</h3>
         <p class="role-company">
-          {job.url ? <a href={job.url} rel="noopener" target="_blank">{job.company}</a> : job.company}
+          {job.url ? <a class="timeline-company-link" href={job.url} rel="noopener" target="_blank">{job.company}</a> : job.company}
         </p>
         <ul>
           {job.highlights.map((highlight) => (
             <li>
-              {highlight.projectSlug
-                ? <a href={`/projects/#${highlight.projectSlug}`}>{highlight.text}</a>
-                : highlight.text}
+              {highlight.text}
+              {highlight.projectSlug && (
+                <> <a class="timeline-project-link" href={`/projects/#${highlight.projectSlug}`}>Details</a></>
+              )}
             </li>
           ))}
         </ul>

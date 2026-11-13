@@ -3,9 +3,29 @@ import { SITE } from '../data/site';
 ---
 <div class="cli">
   <p><span class="prompt">&gt;_</span> Email: <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
-  <p><span class="prompt">&gt;_</span> Phone: {SITE.phone}</p>
+  <p>
+    <span class="prompt">&gt;_</span> Phone:
+    <span data-phone-display>{SITE.phone.replace(/\d(?=(?:\D*\d){2})/g, '*')}</span>
+    <button class="phone-reveal" type="button" data-reveal-phone data-phone={SITE.phone}>Call me</button>
+  </p>
   <p><span class="prompt">&gt;_</span> Portfolio: <a href={SITE.url}>dikangbo.netlify.app</a></p>
-  <p><span class="prompt">&gt;_</span> LinkedIn: <a href={SITE.social.linkedin} rel="me noopener" target="_blank">profile</a></p>
-  <p><span class="prompt">&gt;_</span> GitHub: <a href={SITE.social.github} rel="me noopener" target="_blank">profile</a></p>
-  <p><span class="prompt">&gt;_</span> X: <a href={SITE.social.x} rel="me noopener" target="_blank">profile</a></p>
+  <p><span class="prompt">&gt;_</span> LinkedIn: <a href={SITE.social.linkedin} rel="me noopener" target="_blank">/in/david-ikangbo</a></p>
+  <p><span class="prompt">&gt;_</span> GitHub: <a href={SITE.social.github} rel="me noopener" target="_blank">@Isorshe-ai</a></p>
+  <p><span class="prompt">&gt;_</span> X: <a href={SITE.social.x} rel="me noopener" target="_blank">@Dikangbo</a></p>
 </div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-reveal-phone]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const phone = button.dataset.phone;
+      const display = button.parentElement?.querySelector<HTMLElement>('[data-phone-display]');
+      if (!phone || !display) return;
+
+      const link = document.createElement('a');
+      link.href = `tel:${phone.replace(/[^\d+]/g, '')}`;
+      link.textContent = phone;
+      display.replaceChildren(link);
+      button.remove();
+    });
+  });
+</script>
