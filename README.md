@@ -36,13 +36,13 @@ Astro prints the local development URL in the terminal, usually `http://localhos
 ## Make it yours
 
 1. Update name, biography, location, contact details, social links, and canonical site URL in `src/data/site.ts`.
-2. Edit experience, skills, education, training, and volunteering in `src/data/resume.ts`. The experience page and generated resume use this shared data.
+2. Edit experience, skills, education, training, volunteering, and role-focused resume profiles in `src/data/resume.ts`. Achievement links use project slugs from `src/data/projects.ts`; update `resumeLastUpdated` when refreshing the resume. The experience page and generated resume use this shared data.
 3. Update projects in `src/data/projects.ts` and certifications in `src/data/certifications.ts`.
 4. Replace `public/favicon.svg` and the diagrams in `public/images/blog/` with your own assets.
 5. Add or edit Markdown posts in `src/content/blog/`. Set `draft: true` in frontmatter to hide a post from production builds.
 6. Review the contact form and social links before publishing. The contact form uses Netlify Forms when deployed on Netlify.
 
-The resume at `/resume/` is rendered from your site content; it does not depend on a separately uploaded PDF. Use **Generate Resume PDF** to open the print dialog, then select **Save as PDF**. You can also open `/resume/` and use its print button.
+The resume at `/resume/` is rendered from your site content; it does not depend on a separately uploaded PDF. Visitors can choose a role-focused summary, expand or collapse achievements, follow links to project case studies, copy contact details or the resume URL, and print or save a PDF. Printing includes collapsed achievements and hides interactive controls. Use **Generate Resume PDF** to open the print dialog, then select **Save as PDF**.
 
 ## Deploy
 

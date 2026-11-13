@@ -12,7 +12,15 @@ import { education, experience, volunteering } from '../data/resume';
         <p class="role-company">
           {job.url ? <a href={job.url} rel="noopener" target="_blank">{job.company}</a> : job.company}
         </p>
-        <ul>{job.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+        <ul>
+          {job.highlights.map((highlight) => (
+            <li>
+              {highlight.projectSlug
+                ? <a href={`/projects/#${highlight.projectSlug}`}>{highlight.text}</a>
+                : highlight.text}
+            </li>
+          ))}
+        </ul>
       </div>
     ))}
   </div>

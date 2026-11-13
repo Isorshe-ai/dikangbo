@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { education, experience, resumeSummary, skills, volunteering } from '../data/resume';
+import { projects } from '../data/projects';
+import { education, experience, resumeLastUpdated, resumeProfiles, skills, volunteering } from '../data/resume';
 import { SITE } from '../data/site';
 ---
 <BaseLayout
@@ -12,7 +13,7 @@ import { SITE } from '../data/site';
     <header class="resume-heading">
       <p class="eyebrow">Resume</p>
       <h1>{SITE.name}</h1>
-      <p class="resume-title">DevOps &amp; Platform Engineer · Solutions Architect</p>
+      <p class="resume-title" data-resume-title>DevOps Engineer</p>
       <ul class="resume-contact" aria-label="Contact details">
         <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
         <li><a href={`tel:${SITE.phone.replaceAll(' ', '')}`}>{SITE.phone}</a></li>
@@ -21,11 +22,46 @@ import { SITE } from '../data/site';
         <li><a href={SITE.social.linkedin}>LinkedIn</a></li>
         <li><a href={SITE.social.github}>GitHub</a></li>
       </ul>
+      <p class="resume-updated">Last updated: <time datetime="2026-11-13">{resumeLastUpdated}</time></p>
+      <div class="resume-contact-actions" aria-label="Quick contact actions">
+        <a class="btn" href={`mailto:${SITE.email}`}>Email me</a>
+        <button class="btn btn-ghost" type="button" data-copy-email={SITE.email}>Copy email</button>
+        <span data-copy-status role="status" aria-live="polite"></span>
+      </div>
     </header>
 
-    <section class="resume-section">
-      <h2>Professional Summary</h2>
-      <p>{resumeSummary}</p>
+    <section class="resume-section resume-focus" aria-labelledby="resume-focus-heading">
+      <h2 id="resume-focus-heading">Tailor resume view</h2>
+      <p class="resume-focus-instructions">Choose the role you’re hiring for to highlight a matching summary, skills, and case studies. All experience stays visible below.</p>
+      <div class="resume-focus-controls" role="group" aria-label="Choose a resume role focus">
+        {resumeProfiles.map((profile, index) => (
+          <button
+            class:list={['btn', 'btn-ghost', { active: index === 0 }]}
+            type="button"
+            data-resume-profile={profile.id}
+            data-resume-summary={profile.summary}
+            aria-pressed={index === 0 ? 'true' : 'false'}
+          >
+            {profile.label}
+          </button>
+        ))}
+      </div>
+      <section class="resume-section" aria-labelledby="resume-summary-heading">
+        <h2 id="resume-summary-heading">Professional Summary</h2>
+        <p data-resume-summary-text>{resumeProfiles[0].summary}</p>
+      </section>
+      {resumeProfiles.map((profile, index) => (
+        <div class="resume-profile-panel" data-resume-panel={profile.id} hidden={index !== 0}>
+          <p class="resume-focus-skills"><strong>Role-relevant skills:</strong> {profile.skills.join(' · ')}</p>
+          <h3>Relevant case studies</h3>
+          <ul>
+            {profile.caseStudies.map((slug) => {
+              const project = projects.find((item) => item.slug === slug);
+              return project && <li><a href={`/projects/#${project.slug}`}>{project.title}</a></li>;
+            })}
+          </ul>
+        </div>
+      ))}
     </section>
 
     <section class="resume-section">
@@ -39,6 +75,10 @@ import { SITE } from '../data/site';
 
     <section class="resume-section">
       <h2>Professional Experience</h2>
+      <div class="resume-actions resume-achievement-actions" aria-label="Achievement display controls">
+        <button class="btn btn-ghost" type="button" data-expand-achievements>Expand all achievements</button>
+        <button class="btn btn-ghost" type="button" data-collapse-achievements>Collapse all achievements</button>
+      </div>
       {experience.map((job) => (
         <article class="resume-job">
           <div class="resume-job-heading">
@@ -48,7 +88,29 @@ import { SITE } from '../data/site';
           <p class="resume-company">
             {job.url ? <a href={job.url}>{job.company}</a> : job.company}
           </p>
-          <ul>{job.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+          <ul class="resume-achievements">
+            {job.highlights.slice(0, 3).map((highlight) => (
+              <li>
+                {highlight.projectSlug
+                  ? <>{highlight.text} <a class="achievement-project-link" href={`/projects/#${highlight.projectSlug}`}>Project details</a></>
+                  : highlight.text}
+              </li>
+            ))}
+          </ul>
+          {job.highlights.length > 3 && (
+            <details class="resume-achievements-details" data-achievements-details>
+              <summary>Show {job.highlights.length - 3} more achievements</summary>
+              <ul class="resume-achievements">
+                {job.highlights.slice(3).map((highlight) => (
+                  <li>
+                    {highlight.projectSlug
+                      ? <>{highlight.text} <a class="achievement-project-link" href={`/projects/#${highlight.projectSlug}`}>Project details</a></>
+                      : highlight.text}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
         </article>
       ))}
     </section>
@@ -66,7 +128,9 @@ import { SITE } from '../data/site';
 
     <div class="resume-actions" aria-label="Resume actions">
       <button class="btn" type="button" data-print-resume>Save as PDF / Print</button>
+      <button class="btn btn-ghost" type="button" data-copy-resume-link>Copy resume link</button>
       <a class="btn btn-ghost" href="/">Back to portfolio</a>
+      <span data-resume-link-status role="status" aria-live="polite"></span>
       <p>In the print dialog, choose “Save as PDF” as the destination.</p>
     </div>
   </article>
@@ -75,6 +139,73 @@ import { SITE } from '../data/site';
 <script>
   const printButton = document.querySelector<HTMLButtonElement>('[data-print-resume]');
   printButton?.addEventListener('click', () => window.print());
+
+  const achievementDetails = document.querySelectorAll<HTMLDetailsElement>('[data-achievements-details]');
+  const achievementPrintStates = new Map<HTMLDetailsElement, boolean>();
+  document.querySelector('[data-expand-achievements]')?.addEventListener('click', () => {
+    achievementDetails.forEach((details) => { details.open = true; });
+  });
+  document.querySelector('[data-collapse-achievements]')?.addEventListener('click', () => {
+    achievementDetails.forEach((details) => { details.open = false; });
+  });
+  window.addEventListener('beforeprint', () => {
+    achievementDetails.forEach((details) => {
+      achievementPrintStates.set(details, details.open);
+      details.open = true;
+    });
+  });
+  window.addEventListener('afterprint', () => {
+    achievementPrintStates.forEach((wasOpen, details) => { details.open = wasOpen; });
+    achievementPrintStates.clear();
+  });
+
+  const profileButtons = document.querySelectorAll<HTMLButtonElement>('[data-resume-profile]');
+  const profilePanels = document.querySelectorAll<HTMLElement>('[data-resume-panel]');
+  const profileTitle = document.querySelector<HTMLElement>('[data-resume-title]');
+  const profileSummary = document.querySelector<HTMLElement>('[data-resume-summary-text]');
+  profileButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const selectedProfile = button.dataset.resumeProfile;
+      if (!selectedProfile) return;
+
+      profileButtons.forEach((item) => {
+        const isSelected = item === button;
+        item.setAttribute('aria-pressed', String(isSelected));
+        item.classList.toggle('active', isSelected);
+      });
+      profilePanels.forEach((panel) => {
+        panel.hidden = panel.dataset.resumePanel !== selectedProfile;
+      });
+      if (profileSummary) profileSummary.textContent = button.dataset.resumeSummary ?? '';
+      profileTitle?.replaceChildren(button.textContent?.trim() ?? '');
+    });
+  });
+
+  const copyEmailButton = document.querySelector<HTMLButtonElement>('[data-copy-email]');
+  const copyStatus = document.querySelector<HTMLElement>('[data-copy-status]');
+  copyEmailButton?.addEventListener('click', async () => {
+    if (!copyStatus) return;
+    try {
+      const email = copyEmailButton.dataset.copyEmail;
+      if (!email) throw new Error('Email address is missing');
+      await navigator.clipboard.writeText(email);
+      copyStatus.textContent = 'Email copied';
+    } catch {
+      copyStatus.textContent = 'Copy unavailable — select the email address above.';
+    }
+  });
+
+  const copyResumeLinkButton = document.querySelector<HTMLButtonElement>('[data-copy-resume-link]');
+  const resumeLinkStatus = document.querySelector<HTMLElement>('[data-resume-link-status]');
+  copyResumeLinkButton?.addEventListener('click', async () => {
+    if (!resumeLinkStatus) return;
+    try {
+      await navigator.clipboard.writeText(new URL('/resume/', window.location.origin).href);
+      resumeLinkStatus.textContent = 'Resume link copied';
+    } catch {
+      resumeLinkStatus.textContent = 'Copy unavailable — copy the page address from your browser.';
+    }
+  });
 
   if (new URLSearchParams(window.location.search).get('print') === 'true') {
     const printResume = () => window.setTimeout(() => window.print(), 300);
@@ -103,9 +234,19 @@ import { SITE } from '../data/site';
   .resume-title { margin: .35rem 0 .75rem; color: var(--muted); font-size: 1.15rem; }
   .resume-contact { display: flex; flex-wrap: wrap; gap: .35rem 1rem; margin: 0; padding: 0; list-style: none; }
   .resume-contact li, .resume-contact a { overflow-wrap: anywhere; }
+  .resume-updated { margin: .5rem 0 0; color: var(--muted); font-size: .88rem; }
+  .resume-contact-actions, .resume-focus-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: .8rem; }
+  .resume-contact-actions [data-copy-status] { color: var(--muted); font-size: .9rem; }
   .resume-section { margin-top: 1.35rem; }
   .resume-section h2 { margin: 0 0 .6rem; padding-bottom: .3rem; border-bottom: 1px solid var(--border); font-size: 1.1rem; }
   .resume-section p { margin: .35rem 0; }
+  .resume-focus > p { color: var(--muted); }
+  .resume-focus-controls .active { border-color: var(--accent); background: var(--accent); color: #061014; }
+  .resume-profile-panel { margin-top: 1rem; }
+  .resume-profile-panel[hidden] { display: none; }
+  .resume-profile-panel h3 { margin: .9rem 0 .3rem; font-size: 1rem; }
+  .resume-profile-panel ul { display: flex; flex-wrap: wrap; gap: .3rem 1.25rem; margin: .3rem 0; padding-left: 1.15rem; }
+  .resume-focus-skills { color: var(--muted); }
   .resume-skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .2rem 1rem; }
   .resume-job { margin: .9rem 0 1rem; break-inside: avoid; }
   .resume-job-heading { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
@@ -114,6 +255,11 @@ import { SITE } from '../data/site';
   .resume-company { margin: .1rem 0 .25rem !important; color: var(--muted); font-weight: 600; }
   .resume-job ul, .resume-two-column ul { margin: .25rem 0 0; padding-left: 1.15rem; }
   .resume-job li, .resume-two-column li { margin: .2rem 0; }
+  .resume-achievements-details { margin: .4rem 0 0; }
+  .resume-achievements-details summary { width: fit-content; color: var(--accent-text); cursor: pointer; font-weight: 600; }
+  .achievement-project-link { margin-left: .2rem; font-size: .88em; white-space: nowrap; }
+  .resume-achievement-actions { margin: 0 0 .8rem; }
+  .resume-actions [data-resume-link-status] { color: var(--muted); font-size: .9rem; }
   .resume-two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .resume-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 2rem; }
   .resume-actions p { flex-basis: 100%; margin: 0; color: var(--muted); font-size: .9rem; }
@@ -140,7 +286,7 @@ import { SITE } from '../data/site';
       -webkit-print-color-adjust: exact;
     }
 
-    .site-header, .site-footer, .resume-actions, .skip-link { display: none !important; }
+    .site-header, .site-footer, .resume-actions, .resume-focus-controls, .resume-contact-actions, .skip-link { display: none !important; }
     main.container { display: block !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
     .resume-page {
       max-width: none !important;
@@ -156,9 +302,12 @@ import { SITE } from '../data/site';
     .resume-page * { color: #17212b !important; box-shadow: none !important; }
     .resume-heading { border-color: #087e8b !important; }
     .resume-section h2 { border-color: #cbd5df !important; color: #087e8b !important; }
+    .resume-focus > #resume-focus-heading, .resume-focus-instructions { display: none !important; }
     .resume-job { break-inside: avoid-page; }
     .resume-section h2 { break-after: avoid; }
     .resume-job li, .resume-two-column li { break-inside: avoid; }
+    .resume-achievements-details > summary { display: none !important; }
+    .resume-achievements-details > ul { display: block !important; }
     a { color: inherit !important; text-decoration: none !important; }
     a[href^="http"]::after { content: none !important; }
   }
